@@ -8,9 +8,11 @@ from serial import Serial
 class LelitServer(HTTPServer):
     def __init__(self, serial_port, serial_baudrate, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.sensor = Serial(serial_port, serial_baudrate)
+        self.sensor = Serial(serial_port, serial_baudrate, timeout=1)
 
     def get_sensor_data(self):
+        self.sensor.flushInput()
+        raw_data = self.sensor.readline()
         raw_data = self.sensor.readline()
 
         return self.__parse_sensor_data__(str(raw_data))
