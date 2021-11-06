@@ -20,7 +20,7 @@ class LelitServer(HTTPServer):
     @staticmethod
     def __parse_sensor_data__(data):
         if not data or len(data) < 10:
-            return None
+            return {}
 
         data = str(data).split(',')
         return {
@@ -38,10 +38,9 @@ class RequestHandler(BaseHTTPRequestHandler):
         try:
             data = self.server.get_sensor_data()
         except Exception as e:
-            print(f'Could not read data: {e}')
             self.send_response(500)
             self.end_headers()
-            self.wfile.write(f'Error: {e}'.encode('utf-8'))
+            self.wfile.write(f'Error: {e}'.encode())
             return
 
         self.send_response(200)
